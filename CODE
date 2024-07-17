@@ -1,0 +1,191 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+vector<char> board(10, ' '); // Use characters to represent X and O
+int turn = 0;
+char playFirst;
+
+// Function to make a move for 'O'
+int make2(){
+    if (board[5] == ' ')
+        return 5;
+    else if (board[2] == ' ')
+        return 2;
+    else if (board[4] == ' ')
+        return 4;
+    else if (board[6] == ' ')
+        return 6;
+    else if (board[8] == ' ')
+        return 8;
+}
+// Function to display the board
+
+    //system("cls"); // Clear the screen on Windows
+    void display() {
+       cout << "\n\tTic Tac Toe\n";
+
+    for (int i = 1; i < 10; i++) {
+        if (i % 3 == 1)
+            cout << "\n\t";
+        
+        if (board[i] == 'X')
+            cout << "\033[1;31m" << board[i] << "\033[0m"; // Red color for 'X'
+        else if (board[i] == 'O')
+            cout << "\033[1;34m" << board[i] << "\033[0m"; // Blue color for 'O'
+        else
+            cout << board[i];
+
+        if (i % 3 != 0)
+            cout << " | ";
+        else if (i != 9)
+            cout << "\n\t---------\n";
+    }
+
+    cout << "\n";
+}
+// Function to get user's move
+void userMove(){
+    bool valid = false;
+    int move;
+    while (!valid){
+        cout << "\nEnter a valid move: ";
+        cin >> move;
+        if (move >= 1 && move <= 9 && board[move] == ' ')
+            valid = true;
+    }
+    if (playFirst == 'y' || playFirst == 'Y')
+        board[move] = 'X';
+    else
+        board[move] = 'O';
+}
+
+// Possibility of winning function
+int possWin(char player){
+    char opponent = (player == 'X') ? 'O' : 'X';
+
+    // Check rows, columns, and diagonals
+    for (int i = 1; i <= 9; i += 3) {
+        if (board[i] == player && board[i + 1] == player && board[i + 2] == ' ')
+            return i + 2;
+        if (board[i] == player && board[i + 2] == player && board[i + 1] == ' ')
+            return i + 1;
+        if (board[i + 1] == player && board[i + 2] == player && board[i] == ' ')
+            return i;
+    }
+    for (int i = 1; i <= 3; i++) {
+        if (board[i] == player && board[i + 3] == player && board[i + 6] == ' ')
+            return i + 6;
+        if (board[i] == player && board[i + 6] == player && board[i + 3] == ' ')
+            return i + 3;
+        if (board[i + 3] == player && board[i + 6] == player && board[i] == ' ')
+            return i;
+    }
+    if (board[1] == player && board[5] == player && board[9] == ' ')
+        return 9;
+    if (board[1] == player && board[9] == player && board[5] == ' ')
+        return 5;
+    if (board[5] == player && board[9] == player && board[1] == ' ')
+        return 1;
+    if (board[3] == player && board[5] == player && board[7] == ' ')
+        return 7;
+    if (board[3] == player && board[7] == player && board[5] == ' ')
+        return 5;
+    if (board[5] == player && board[7] == player && board[3] == ' '
+        return 3;
+    return 0;
+}
+// Check for a win function
+bool checkWin(char player){
+    char opponent = (player == 'X') ? 'O' : 'X';
+    // Check rows, columns, and diagonals
+    for (int i = 1; i <= 9; i += 3) {
+        if (board[i] == player && board[i + 1] == player && board[i + 2] == player)
+            return true;
+    }
+    for (int i = 1; i <= 3; i++) {
+        if (board[i] == player && board[i + 3] == player && board[i + 6] == player)
+            return true;
+    }
+    if (board[1] == player && board[5] == player && board[9] == player)
+        return true;
+    if (board[3] == player && board[5] == player && board[7] == player)
+        return true;
+    return false;
+}
+// Function for the computer's move
+void computerMove(){
+    int move;
+
+    // First, check if the computer can win
+    move = possWin('O');
+    if (move != 0) {
+        board[move] = 'O';
+        return;
+    }
+
+    move = possWin('X');
+    if (move != 0) {
+        board[move] = 'O';
+        return;    }
+    move = make2();
+    board[move] = 'O';}
+
+int main(){
+     cout << "\n";
+     
+    if (turn == 0) {
+        cout << "\033[1;34m"; // Cool blue color for the question
+    }
+
+    cout << "Do you want to play first? Enter ";
+    if (turn == 0) {
+        cout << "\033[0m"; // Reset color after the question
+    }
+
+    cout << "\033[1;36mY/y\033[0m for yes: ";
+    cin >> playFirst;
+
+    if (playFirst == 'y' || playFirst == 'Y'){
+        while (true){
+            turn++;
+            userMove();
+            display();
+
+            if (checkWin('X')){
+                cout << "User won!" << endl;
+                break;
+            }
+
+            if (turn == 9) {
+                cout << "It's a draw!" << endl;
+                break;
+            }
+            turn++;
+            computerMove();
+            display();
+
+            if (checkWin('O')){
+                cout << "Computer won!" << endl;
+                break;}}}else {
+        while (true){
+            turn++;
+            computerMove();
+            display();
+
+            if (checkWin('O')){
+                cout << "Computer won!" << endl;
+                break;            }
+            if (turn == 9) {
+                cout << "It's a draw!" << endl;
+                break;            }
+            turn++;
+            userMove();
+            display();
+
+            if (checkWin('X')){
+                cout << "User won!" << endl;
+                break; }}}
+
+    return 0;
+}
+
